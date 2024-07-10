@@ -1,0 +1,101 @@
+HOTEL BOOKING REGISTRATION FORM
+
+HTML CODES-
+
+<form id="bookingForm">
+    <!-- Customer Info -->
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    
+    <label for="checkin">Check-in Date:</label>
+    <input type="date" id="checkin" name="checkin" required><br><br>
+    
+    <label for="totalDays">Total Days:</label>
+    <input type="number" id="totalDays" name="totalDays" required><br><br>
+    
+    <label for="totalPersons">Total Persons:</label>
+    <input type="number" id="totalPersons" name="totalPersons" required><br><br>
+    
+    <label for="advanceAmount">Advance Amount:</label>
+    <input type="number" id="advanceAmount" name="advanceAmount" required><br><br>
+    
+    <!-- Room Info -->
+    <label for="roomType">Room Type:</label>
+    <select id="roomType" name="roomType">
+        <option value="Delux">Delux</option>
+        <option value="Suite">Suite</option>
+    </select><br><br>
+    
+    <label for="amenitiesAC">AC:</label>
+    <input type="checkbox" id="amenitiesAC" name="amenitiesAC">
+    
+    <label for="amenitiesLocker">Locker:</label>
+    <input type="checkbox" id="amenitiesLocker" name="amenitiesLocker"><br><br>
+    
+    <!-- Payment and Balance -->
+    <label for="advancePayment">Advance Payment:</label>
+    <input type="number" id="advancePayment" name="advancePayment"><br><br>
+    
+    <label for="balance">Balance:</label>
+    <input type="number" id="balance" name="balance" disabled><br><br>
+    
+    <!-- Total Cost -->
+    <label for="totalCost">Total Cost:</label>
+    <input type="number" id="totalCost" name="totalCost" disabled><br><br>
+    
+    <button type="button" onclick="calculateCost()">Calculate Cost</button>
+</form>
+
+SCRIPT CODE-
+
+function calculateCost() {
+    // Room Rates (assuming predefined rates)
+    const deluxeRate = 2000; // Rate for Deluxe Room per day
+    const suiteRate = 3000; // Rate for Suite Room per day
+    const acRate = 500; // Rate for AC per day
+    const lockerRate = 200; // Rate for Locker per day
+    const extraPersonCharge = 1000; // Charge per extra person per day
+
+    // Retrieve form values
+    let totalDays = parseInt(document.getElementById("totalDays").value);
+    let roomType = document.getElementById("roomType").value;
+    let amenitiesAC = document.getElementById("amenitiesAC").checked;
+    let amenitiesLocker = document.getElementById("amenitiesLocker").checked;
+    let totalPersons = parseInt(document.getElementById("totalPersons").value);
+    let advanceAmount = parseInt(document.getElementById("advanceAmount").value);
+    let advancePayment = parseInt(document.getElementById("advancePayment").value);
+
+    // Calculate Room Cost
+    let roomCost = 0;
+    if (roomType === "Delux") {
+        roomCost = deluxeRate * totalDays;
+    } else if (roomType === "Suite") {
+        roomCost = suiteRate * totalDays;
+    }
+
+    // Calculate Amenities Cost
+    let amenitiesCost = 0;
+    if (amenitiesAC) {
+        amenitiesCost += acRate * totalDays;
+    }
+    if (amenitiesLocker) {
+        amenitiesCost += lockerRate * totalDays;
+    }
+
+    // Calculate Extra Person Charges
+    let extraPersonCharges = 0;
+    if (totalPersons > 1) {
+        extraPersonCharges = extraPersonCharge * totalPersons * totalDays;
+    }
+
+    // Total Room Cost and Amenities Cost
+    let totalRoomCost = roomCost + amenitiesCost;
+
+    // Update Total Cost field
+    let totalCost = totalRoomCost + extraPersonCharges;
+    document.getElementById("totalCost").value = totalCost;
+
+    // Calculate Balance
+    let balance = totalCost - advancePayment;
+    document.getElementById("balance").value = balance;
+}
